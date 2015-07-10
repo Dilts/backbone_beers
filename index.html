@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Josh's Beer Cooler</title>
+  <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js">
+</head>
+<body>
+  <div class="container">
+    <h1>Beer Cooler Exercise</h1>
+    <hr />
+    <div class="page"></div>
+  </div>
+
+
+<!-- Load the scripts we need for backbone.js -->
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="text/javascript"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js" type="text/javascript"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.2.1/backbone-min.js"></script>
+
+<!-- backbone code start -->
+  <script>
+    // modifys the base URL of ajax requests
+  $.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
+    options.url = 'http://beer.fluentcloud.com/v1' + options.url;
+  });
+
+  var Beers = Backbone.Collection.extend({
+    url: '/beer'
+  })
+
+  // Views Start
+    var BeerList = Backbone.View.extend({
+      el: '.page',
+      render: function () {
+        var beers = new Beers();
+        beers.fetch({
+          success: function () {
+            this.$el.html('A list of beers in the future');
+          }
+        })
+      }
+    });
+  // Router Start
+  var Router = Backbone.Router.extend({
+    routes: {
+      '': 'home'
+    }
+  });
+
+// instances
+  var beerList = new BeerList();
+  var router = new Router();
+
+  router.on('route:home', function (){
+    // console.log('This should show the home view.')
+    beerList.render();
+  });
+
+
+  Backbone.history.start();
+
+  </script>
+<!-- backbone code end -->
+</body>
+</html> 
